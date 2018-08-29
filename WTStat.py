@@ -64,6 +64,22 @@ def parse_damage(msg):
 	m = re.match("(.*) присоединился к событию", msg)
 	if m:
 		return
+	m = re.match("(.*) сбил (.*) \((.*)\)", msg)
+	if m:
+		if m.group(2) == user_name:
+			stats['deaths']+=1
+		return
+	m = re.match("(.*) уничтожил (.*) \((.*)\)", msg)
+	if m:
+		if m.group(2) == user_name:
+			stats['deaths']+=1
+		return
+	m = re.match("(.*) сбил (.*)", msg)
+	if m:
+		return
+	m = re.match("(.*) уничтожил (.*)", msg)
+	if m:
+		return
 	log("Not parsed: " + msg)
 
 def make_text():
@@ -74,9 +90,11 @@ def make_text():
 	return res
 
 def log(msg):
-	f = open(os.path.realpath(__file__)+"_battle.log","a")
-	f.write(str(msg)+"\n")
-	f.close()
+	f = open(os.path.realpath(__file__)+"_battle.log","a", encoding="utf-8")
+	try:
+		f.write(str(msg)+"\n")
+	finally:
+		f.close()
 	
 def update_text():
 	global source_name
@@ -99,7 +117,7 @@ def update_text():
 				for evt in js['events']:
 					lastEvt = evt['id']
 				for dmg in js['damage']:
-					log(dmg)
+#					log(dmg)
 					lastDmg = dmg['id']
 					if doParse:
 						parse_damage(dmg['msg'])
@@ -146,7 +164,7 @@ def script_load(settings):
 	stats['deaths'] = 0
 
 def script_defaults(settings):
-	obs.obs_data_set_default_string(settings, "ip_address", "localhost:8111")
+	obs.obs_data_set_default_string(settings, "ip_address", "127.0.0.1:8111")
 	
 def script_description():
 	return "WT Писькомер v. 0.001\n(cc) ZorroGFS"
@@ -159,6 +177,9 @@ def script_update(settings):
 	source_name    = obs.obs_data_get_string(settings, "source")
 	ip_address  = obs.obs_data_get_string(settings, "ip_address")
 	user_name   = obs.obs_data_get_string(settings, "user_name")
+	stats['kills'] = obs.obs_data_get_int(obsData, "ikills")
+	stats['burns'] = obs.obs_data_get_int(obsData, "iburns")
+	stats['deaths'] = obs.obs_data_get_int(obsData, "ideaths")
 	obs.timer_remove(update_text)
 	if ip_address != "" and source_name != "" and user_name != "":
 		obs.timer_add(update_text, 1000)
