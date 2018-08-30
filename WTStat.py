@@ -60,74 +60,74 @@ def addcrit():
 def parse_damage(msg):
 	global user_name
 	global stats
-	m = re.match("(.*) \((.*)\) сбил (.*) \((.*)\)", msg)
+	m = re.match("([^(]+) \((.+)\) сбил ([^(]+) \((.+)\)", msg)
 	if m:
 		if m.group(1) == user_name:
 			addkill(m.group(2))
 		if m.group(3) == user_name:
 			adddeath(m.group(4))
 		return
-	m = re.match("(.*) \((.*)\) уничтожил (.*) \((.*)\)", msg)
+	m = re.match("([^(]+) \((.+)\) уничтожил ([^(]+) \((.+)\)", msg)
 	if m:
 		if m.group(1) == user_name:
 			addkill(m.group(2))
 		if m.group(3) == user_name:
 			adddeath(m.group(4))
 		return
-	m = re.match("(.*) \((.*)\) разбился", msg)
+	m = re.match("([^(]+) \((.+)\) разбился", msg)
 	if m:
 		if m.group(1) == user_name:
 			adddeath(m.group(2))
 		return
-	m = re.match("(.*) \((.*)\) выведен из строя", msg)
+	m = re.match("([^(]+) \((.+)\) выведен из строя", msg)
 	if m:
 		if m.group(1) == user_name:
 			adddeath(m.group(2))
 		return
-	m = re.match("(.*) \((.*)\) получил \"(.*)\"", msg)
+	m = re.match("([^(]+) \((.+)\) получил \"(.+)\"", msg)
 	if m:
 		if m.group(1) == user_name:
 			addmedal()
 		return
-	m = re.match("(.*) \((.*)\) подбил (.*) \((.*)\)", msg)
+	m = re.match("([^(]+) \((.+)\) подбил ([^(]+) \((.+)\)", msg)
 	if m:
 		if m.group(1) == user_name:
 			addcrit()
 		return
-	m = re.match("(.*) \((.*)\) поджёг (.*) \((.*)\)", msg)
+	m = re.match("([^(]+) \((.+)\) поджёг ([^(]+) \((.+)\)", msg)
 	if m:
 		if m.group(1) == user_name:
 			addburn()
 		return
-	m = re.match("(.*) \((.*)\) нанёс последний удар!", msg)
+	m = re.match("([^(]+) \((.+)\) нанёс последний удар!", msg)
 	if m:
 		return
-	m = re.match("(.*) \((.*)\) ударил первым!", msg)
+	m = re.match("([^(]+) \((.+)\) ударил первым!", msg)
 	if m:
 		return
-	m = re.match("(.*) присоединился к событию", msg)
+	m = re.match("(.+) присоединился к событию", msg)
 	if m:
 		return
-	m = re.match("(.*) сбил (.*) \((.*)\)", msg)
-	if m:
-		if m.group(2) == user_name:
-			adddeath(m.group(3))
-		return
-	m = re.match("(.*) уничтожил (.*) \((.*)\)", msg)
+	m = re.match("(.+) сбил ([^(]+) \((.+)\)", msg)
 	if m:
 		if m.group(2) == user_name:
 			adddeath(m.group(3))
 		return
-	m = re.match("(.*) сбил (.*)", msg)
+	m = re.match("(.+) уничтожил ([^(]+) \((.+)\)", msg)
+	if m:
+		if m.group(2) == user_name:
+			adddeath(m.group(3))
+		return
+	m = re.match("(.+) сбил (.+)", msg)
 	if m:
 		return
-	m = re.match("(.*) уничтожил (.*)", msg)
+	m = re.match("(.+) уничтожил (.+)", msg)
 	if m:
 		return
-	m = re.match("(.*) подбил (.*)", msg)
+	m = re.match("(.+) подбил (.+)", msg)
 	if m:
 		return
-	m = re.match("(.*) поджёг (.*)", msg)
+	m = re.match("(.+) поджёг (.+)", msg)
 	if m:
 		return
 	log("Not parsed: " + msg)
@@ -263,7 +263,7 @@ def script_defaults(settings):
 	obs.obs_data_set_default_bool(settings, "smedals", False)
 	
 def script_description():
-	return "WT Писькомер v. 0.002\n(cc) ZorroGFS"
+	return "WT Писькомер v. 0.003\n(cc) ZorroGFS"
 
 def script_update(settings):
 	global source_name
