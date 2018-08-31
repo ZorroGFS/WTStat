@@ -12,6 +12,7 @@ user_name   = ""
 lastEvt = 0
 lastDmg = 0
 maxLen = 0
+topsize = 5
 stats = {}
 shows = {}
 obsData = ""
@@ -173,10 +174,11 @@ def make_text():
 def make_top():
 	global stats
 	global maxLen
+	global topsize
 	res = ""
 	i = 0
 	for key in sorted(stats['k'], key=stats['k'].__getitem__, reverse=True):
-		if i == 5:
+		if i == topsize:
 			break
 		else:
 			i += 1
@@ -298,6 +300,7 @@ def script_unload():
 
 def script_defaults(settings):
 	obs.obs_data_set_default_string(settings, "ip_address", "127.0.0.1:8111")
+	obs.obs_data_set_default_int(settings, "topsize", 5)
 	obs.obs_data_set_default_bool(settings, "skills", True)
 	obs.obs_data_set_default_bool(settings, "sdeaths", True)
 	obs.obs_data_set_default_bool(settings, "sburns", False)
@@ -305,7 +308,7 @@ def script_defaults(settings):
 	obs.obs_data_set_default_bool(settings, "smedals", False)
 	
 def script_description():
-	return "WT Писькомер v. 0.004\n(cc) ZorroGFS"
+	return "WT Писькомер v. 0.005\n(cc) ZorroGFS"
 
 def script_update(settings):
 	global source_name
@@ -313,6 +316,7 @@ def script_update(settings):
 	global ip_address
 	global user_name
 	global shows
+	global topsize
 	source_name    = obs.obs_data_get_string(settings, "source")
 	source_top5    = obs.obs_data_get_string(settings, "sourcetop")
 	ip_address  = obs.obs_data_get_string(settings, "ip_address")
@@ -322,6 +326,7 @@ def script_update(settings):
 	shows['burns'] = obs.obs_data_get_bool(settings, "sburns")
 	shows['crits'] = obs.obs_data_get_bool(settings, "scrits")
 	shows['medals'] = obs.obs_data_get_bool(settings, "smedals")
+	topsize = obs.obs_data_get_int(settings, "topsize")
 	obs.timer_remove(update_text)
 	if ip_address != "" and source_name != "" and user_name != "":
 		obs.timer_add(update_text, 1000)
@@ -348,9 +353,7 @@ def script_properties():
 				name = obs.obs_source_get_name(source)
 				obs.obs_property_list_add_string(p, name, name)
 		obs.source_list_release(sources)
-#	obs.obs_properties_add_int(props, "ikills", "Убийств", 0, 1000, 1)
-#	obs.obs_properties_add_int(props, "iburns", "Поджогов", 0, 1000, 1)
-#	obs.obs_properties_add_int(props, "ideaths", "Смертей", 0, 1000, 1)
+	obs.obs_properties_add_int(props, "topsize", "Размер топа", 3, 20, 1)
 	obs.obs_properties_add_bool(props, "skills", "Отображать убийства")
 	obs.obs_properties_add_bool(props, "sdeaths", "Смерти")
 	obs.obs_properties_add_bool(props, "sburns", "Поджоги")
