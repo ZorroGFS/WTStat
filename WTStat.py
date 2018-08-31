@@ -249,14 +249,14 @@ def reset_stat():
 
 def save_stat():
 	global stats
-	with open(os.path.realpath(__file__)+"_save.dat","w") as f:
+	with open(os.path.realpath(__file__)+"_save.dat","w", encoding="utf-8") as f:
 		json.dump(stats, f)
 	f.close()
 
 def load_stat():
 	global stats
 	global maxLen
-	with open(os.path.realpath(__file__)+"_save.dat","r") as f:
+	with open(os.path.realpath(__file__)+"_save.dat","r", encoding="utf-8") as f:
 		stats = json.load(f)
 	f.close()
 	maxLen = 0
