@@ -240,6 +240,8 @@ def update_text():
 
 def reset_stat():
 	global stats
+	global maxLen
+	maxLen = 0
 	stats={}
 	stats['k']={}
 	stats['d']={}
@@ -258,13 +260,14 @@ def save_stat():
 def load_stat():
 	global stats
 	global maxLen
-	with open(os.path.realpath(__file__)+"_save.dat","r", encoding="utf-8") as f:
-		stats = json.load(f)
-	f.close()
-	maxLen = 0
-	for k in stats['k'].keys():
-		if len(k) > maxLen:
-			maxLen = len(k)
+	if os.path.isfile(os.path.realpath(__file__)+"_save.dat"):
+		with open(os.path.realpath(__file__)+"_save.dat","r", encoding="utf-8") as f:
+			stats = json.load(f)
+		f.close()
+	if len(stats['k']) > 0:
+		maxLen = max(len(k) for k in stats['k'].keys())
+	else:
+		maxLen = 0
 
 # --- Buttons
 	
